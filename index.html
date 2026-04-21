@@ -1,31 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Hygrometer Calculator – Mobile</title>
-<meta name="theme-color" content="#0f172a">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="icons/icon-192.png">
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(() => console.log('서비스 워커 등록 성공'))
-      .catch(err => console.log('서비스 워커 등록 실패:', err));
-  });
-}
-</script>
-</head>
-<body>
-<!-- 원래 HTML 내용 여기에 넣기 -->
-<!DOCTYPE html>
-<!-- saved from url=(0109)file:///C:/Users/KHAN/AppData/Local/Microsoft/Windows/INetCache/IE/A9P0C1II/weather%20Condition%20R.0[1].html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Hygrometer Calculator – Mobile</title>
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#0f172a" />
 <style>
   /* Universal box-sizing for consistent layout */
   *, *::before, *::after {
@@ -387,12 +366,12 @@ if ('serviceWorker' in navigator) {
         <!-- 'Memo' label and timestamp on one line -->
         <div class="memo-header">
           <div class="memo-label">Memo</div>
-          <div class="memo-datetime-display" id="memo-datetime">2025.08.11 12:00</div>
+          <div class="memo-datetime-display" id="memo-datetime">—</div>
         </div>
         <!-- Memo input field on a new line, full width -->
         <div class="memo-input-container">
           <div class="input">
-            <input id="memo" maxlength="20" placeholder="Enter memo">
+            <input id="memo" maxlength="20" placeholder="Enter memo" />
           </div>
         </div>
       </div>
@@ -406,15 +385,15 @@ if ('serviceWorker' in navigator) {
                 <div class="column-title">INPUT</div>
                 <div class="input-row-item">
                     <label for="dry">D.B</label>
-                    <div class="input"><input id="dry" inputmode="decimal" placeholder=""><span class="unit-badge" id="u1">°C</span></div>
+                    <div class="input"><input id="dry" inputmode="decimal" placeholder="" /><span class="unit-badge" id="u1">°C</span></div>
                 </div>
                 <div class="input-row-item">
                     <label for="dry">W.B</label>
-                    <div class="input"><input id="wet" inputmode="decimal" placeholder=""><span class="unit-badge" id="u2">°C</span></div>
+                    <div class="input"><input id="wet" inputmode="decimal" placeholder="" /><span class="unit-badge" id="u2">°C</span></div>
                 </div>
                 <div class="input-row-item">
                     <label for="dry">S/T</label>
-                    <div class="input"><input id="surf" inputmode="decimal" placeholder=""><span class="unit-badge" id="u3">°C</span></div>
+                    <div class="input"><input id="surf" inputmode="decimal" placeholder="" /><span class="unit-badge" id="u3">°C</span></div>
                 </div>
             </div>
 
@@ -449,14 +428,14 @@ if ('serviceWorker' in navigator) {
         <div class="photo-grid-container">
             <!-- Container for the first photo -->
             <div class="photo-container" id="photo-container-1">
-                <input type="file" id="photo-input-1" accept="image/*" capture="camera" style="display:none;">
-                <img id="captured-photo-1" src="file:///C:/Users/KHAN/AppData/Local/Microsoft/Windows/INetCache/IE/A9P0C1II/weather%20Condition%20R.0[1].html" alt="Captured Photo 1">
+                <input type="file" id="photo-input-1" accept="image/*" capture="camera" style="display:none;" />
+                <img id="captured-photo-1" src="" alt="Captured Photo 1" />
                 <div class="photo-placeholder-text" id="photo-placeholder-text-1">Photo</div>
             </div>
             <!-- Container for the second photo -->
             <div class="photo-container" id="photo-container-2">
-                <input type="file" id="photo-input-2" accept="image/*" capture="camera" style="display:none;">
-                <img id="captured-photo-2" src="file:///C:/Users/KHAN/AppData/Local/Microsoft/Windows/INetCache/IE/A9P0C1II/weather%20Condition%20R.0[1].html" alt="Captured Photo 2">
+                <input type="file" id="photo-input-2" accept="image/*" capture="camera" style="display:none;" />
+                <img id="captured-photo-2" src="" alt="Captured Photo 2" />
                 <div class="photo-placeholder-text" id="photo-placeholder-text-2">Photo</div>
             </div>
         </div>
@@ -479,7 +458,7 @@ if ('serviceWorker' in navigator) {
   </main>
 
   <!-- html2canvas for screenshot -->
-  <script src="./Hygrometer Calculator – Mobile_files/html2canvas.min.js.다운로드"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script>
     // Helpers
     const el = id => document.getElementById(id);
@@ -819,3 +798,5 @@ if ('serviceWorker' in navigator) {
   </script>
 </body>
 </html>
+
+```
