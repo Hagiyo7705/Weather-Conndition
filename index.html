@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hygrometer Calculator – Mobile</title>
+<meta name="theme-color" content="#0f172a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('서비스 워커 등록 성공'))
+      .catch(err => console.log('서비스 워커 등록 실패:', err));
+  });
+}
+</script>
+</head>
+<body>
+<!-- 원래 HTML 내용 여기에 넣기 -->
+<!DOCTYPE html>
+<!-- saved from url=(0109)file:///C:/Users/KHAN/AppData/Local/Microsoft/Windows/INetCache/IE/A9P0C1II/weather%20Condition%20R.0[1].html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hygrometer Calculator – Mobile</title>
+<meta name="theme-color" content="#0f172a">
+<style>
+  /* Universal box-sizing for consistent layout */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  :root{
+    /* Dark Mode Colors (Default) */
+    --bg:#0f172a;
+    --panel:#0b1020;
+    --border:#1f2937;
+    --text:#e5e7eb;
+    --muted:#94a3b8;
+    --cool:#3b82f6;
+    --danger:#ef4444;
+    --shadow:0 0px 10px rgba(0,0,0,.25);
+  }
+
+  /* Light Mode Colors */
+  body.light-theme {
+    --bg:#f8fafc;
+    --panel:#ffffff;
+    --border:#e2e8f0;
+    --text:#1e293b;
+    --muted:#64748b;
+    --cool:#2563eb; /* Slightly darker blue for contrast in light mode */
+    --danger:#dc2626; /* Slightly darker red for contrast in light mode */
+  }
+
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:linear-gradient(180deg,var(--panel),var(--bg) 40%,var(--panel)); /* Use CSS variables */
+    color:var(--text);
+    font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px; /* Adjusted base font size */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transition */
+  }
+  .container{ max-width:480px; margin:0 auto; padding:16px 12px 24px; }
+  .card{
+    background:var(--panel); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow);
+    padding:14px;
+    margin-bottom: 0px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth theme transition */
+  }
+  .appbar{
+    position:sticky; top:0; z-index:10; backdrop-filter: blur(6px);
+    background:rgba(15,23,42,.75); border-bottom:1px solid var(--border);
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth theme transition */
+  }
+  body.light-theme .appbar {
+    background:rgba(255,255,255,.75); /* Adjust appbar for light mode */
+  }
+  .appbar-inner{ max-width:480px; margin:0 auto; padding:10px 12px; display:flex; align-items:center; justify-content:space-between;}
+  .title{font-weight:800; letter-spacing:.2px; font-size: 1.25em; /* Adjusted title size */}
+  .time{
+    font-variant-numeric:tabular-nums;
+    color:var(--muted);
+    font-size: 1.175em; /* Adjusted time size: 1.05em (16.8px) + 2px = 18.8px. 18.8px / 16px = 1.175em */
+    font-weight: bold; /* Made bold */
+  }
+  label{display:block; font-size: 0.9em; /* Adjusted label size */ color:var(--muted); margin-bottom:6px}
+  .input{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:var(--bg); /* Use bg for input background */
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 12px;
+    width: auto;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth theme transition */
+  }
+  /* Updated to center the text and value */
+  .input input, .input .value {
+    flex-grow: 1; /* Allow content to fill available space */
+    min-width: 0; /* Allow content to shrink below its intrinsic size */
+    border:none;
+    outline:none;
+    background:transparent;
+    color:var(--text);
+    font-size:1.15em;
+    font-variant-numeric:tabular-nums;
+    line-height:1.2;
+    text-align: center; /* Center align text inside input/value div */
+  }
+  .input input { /* Specific styles for the actual input element */
+    margin: 0; /* Ensure no default margin */
+    padding: 0; /* Ensure no default padding */
+  }
+  .input .value { /* Specific styles for the value display div */
+    font-weight: normal; /* Ensure it matches input field's font weight */
+  }
+  .unit-badge{
+    flex-shrink: 0; /* Prevent unit from shrinking */
+    font-size: 0.9em;
+    color:var(--muted);
+  }
+  .section-title{font-size: 1em; /* Adjusted section title size */ font-weight:800; color:#cbd5e1; letter-spacing:.2px; margin:6px 0 10px}
+  body.light-theme .section-title {
+    color: var(--text);
+  }
+  .row{ display:flex; flex-direction:column; gap:10px; }
+  .btn{
+    appearance:none; border:1px solid var(--border); background:var(--bg); /* Use bg for button background */
+    color:var(--text);
+    padding:12px 14px; border-radius:12px; font-weight:700; width:100%; box-shadow:var(--shadow); font-size: 1em;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth theme transition */
+  }
+  .btn:active{transform:translateY(1px)}
+  .buttons{
+    display:flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .unit-toggle{
+    display: flex;
+    gap: 6px;
+    background: var(--bg); /* Use bg for unit toggle background */
+    border: 1px solid var(--border);
+    padding: 6px;
+    border-radius: 999px;
+    width: max-content;
+    margin-left: auto;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Smooth theme transition */
+  }
+  .unit-toggle button{
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-weight: 800;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth theme transition */
+  }
+  .unit-toggle button.active{ background:var(--border); color:var(--text) }
+  .note{ font-size: 0.85em; /* Adjusted note size */ color:var(--muted) }
+  /* Changed risk to solid red */
+  .risk { color: var(--danger) !important; }
+  .cool{ color:var(--cool) !important; }
+  .row-gap{ height:4px }
+  /* Increase touch targets */
+  .tap{ padding:14px 16px }
+  /* Prevent layout shift on mobile keyboards */
+  @supports (height: 100dvh) {
+    body{ min-height:100dvh }
+  }
+  
+  /* NEW: styles for the two-column layout */
+  .two-column-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: flex-start;
+  }
+  
+  /* Common styles for sections inside the two-column layout */
+  .input-column, .result-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  /* Styles for section titles within the new layout */
+  .column-title {
+    font-size: 1.15em;
+    font-weight: 800;
+    color: #cbd5e1;
+    text-align: center;
+    margin-bottom: 5px;
+    padding: 0 5px;
+  }
+  body.light-theme .column-title {
+    color: var(--text);
+  }
+  
+  /* Use Grid for each row to guarantee alignment */
+  .two-column-layout .input-row-item, .two-column-layout .result-row-item {
+      display: grid;
+      grid-template-columns: auto 100px; /* Adjusted fixed width to be smaller for mobile */
+      gap: 8px;
+      align-items: center;
+  }
+  /* Labels for input fields (D.B, W.B, S/T) */
+  .two-column-layout .input-row-item label {
+      margin-bottom: 0;
+      font-size: 1.15em;
+      text-align: center;
+  }
+  
+  /* Labels for result fields (RH, DP, ΔT) */
+  .two-column-layout .result-row-item .result-label-col {
+      margin-bottom: 0;
+      font-size: 1.15em;
+      text-align: center;
+  }
+  
+  /* Styles for Delta T output value */
+  #deltat {
+    font-size: 1.275em;
+    font-weight: bold;
+  }
+  /* Style for the contact email */
+  .contact-email {
+    text-align: right;
+    color: var(--muted);
+    font-size: 0.85em;
+    width: 100%;
+  }
+
+  /* Memo input text alignment */
+  .memo-input input {
+    text-align: left;
+  }
+
+  /* NEW grid layout for action buttons */
+  .button-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.2fr; /* Make the Clear button column slightly wider */
+    grid-template-rows: auto auto; /* Two rows */
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  /* Positioning for the buttons based on the new layout */
+  .button-grid #btnSaveData {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+  }
+  .button-grid #btnShare {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+  .button-grid #btnToggleTheme {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+  }
+  .button-grid .unit-toggle {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    width: auto;
+    justify-content: center;
+    margin-left: 0;
+  }
+  .button-grid #btnClear {
+    grid-column: 3 / 4;
+    grid-row: 1 / 3; /* Clear button spans two rows */
+    height: auto;
+  }
+
+  .unit-toggle button {
+    flex-grow: 1;
+  }
+  
+  /* Custom styles for the Memo section */
+  #memo-section .section-content-centered {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  /* Memo Header: "Memo" label and timestamp on one line */
+  .memo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+  }
+
+  .memo-label {
+      font-weight: 700;
+      font-size: 1.15em;
+      color: var(--text);
+  }
+
+  .memo-datetime-display {
+      font-variant-numeric: tabular-nums;
+      color: var(--muted);
+      font-size: 1.15em;
+      font-weight: bold;
+  }
+  
+  /* Memo Input Container: spans the full width on a new line */
+  .memo-input-container {
+      width: 100%;
+      flex: 1;
+      min-width: 0;
+  }
+
+  .memo-input-container .input {
+    width: 100%;
+  }
+
+  .memo-input input {
+    text-align: left;
+    width: 100%;
+  }
+  /* DeltaT note styling */
+  .deltat-note {
+    text-align: center;
+    font-size: 0.8em;
+    color: var(--muted);
+    margin-top: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Photo section specific styles */
+  .photo-section .card {
+    padding: 0;
+  }
+  /* Container for multiple photos */
+  .photo-grid-container {
+      display: flex;
+      gap: 10px;
+      margin: 14px;
+  }
+  /* Individual photo container */
+  .photo-container {
+      flex: 1;
+      height: 150px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+  }
+  /* Placeholder text */
+  .photo-container .photo-placeholder-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--muted);
+      font-size: 1.2em;
+      font-weight: 700;
+      pointer-events: none;
+      /* Ensure text is above the image but below the overlay */
+      z-index: 1;
+  }
+  /* Image element */
+  .photo-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+      display: none;
+  }
+</style>
+</head>
+<body>
+  <main class="container" id="capture-area">
+    <!-- Memo -->
+    <section class="card" id="memo-section" style="margin-bottom:0px">
+      <div class="section-content-centered">
+        <!-- 'Memo' label and timestamp on one line -->
+        <div class="memo-header">
+          <div class="memo-label">Memo</div>
+          <div class="memo-datetime-display" id="memo-datetime">2025.08.11 12:00</div>
+        </div>
+        <!-- Memo input field on a new line, full width -->
+        <div class="memo-input-container">
+          <div class="input">
+            <input id="memo" maxlength="20" placeholder="Enter memo">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Combined Input & Result Section -->
+    <section class="card" id="combined-section" style="margin-top:10px">
+        <div class="two-column-layout">
+            <!-- Left Column: Input -->
+            <div class="input-column">
+                <div class="column-title">INPUT</div>
+                <div class="input-row-item">
+                    <label for="dry">D.B</label>
+                    <div class="input"><input id="dry" inputmode="decimal" placeholder=""><span class="unit-badge" id="u1">°C</span></div>
+                </div>
+                <div class="input-row-item">
+                    <label for="dry">W.B</label>
+                    <div class="input"><input id="wet" inputmode="decimal" placeholder=""><span class="unit-badge" id="u2">°C</span></div>
+                </div>
+                <div class="input-row-item">
+                    <label for="dry">S/T</label>
+                    <div class="input"><input id="surf" inputmode="decimal" placeholder=""><span class="unit-badge" id="u3">°C</span></div>
+                </div>
+            </div>
+
+            <!-- Right Column: Result -->
+            <div class="result-column">
+                <div class="column-title">RESULT</div>
+                <div class="result-row-item">
+                    <div class="result-label-col">RH</div>
+                    <div class="input">
+                        <div class="value" id="rh">—</div><span class="unit-badge">%</span>
+                    </div>
+                </div>
+                <div class="result-row-item">
+                    <div class="result-label-col">DP</div>
+                    <div class="input">
+                        <div class="value" id="dp">—</div><span class="unit-badge" id="dp-unit-badge">°C</span>
+                    </div>
+                </div>
+                <div class="result-row-item">
+                    <div class="result-label-col">ΔT</div>
+                    <div class="input">
+                        <div class="value" id="deltat">—</div><span class="unit-badge" id="deltat-unit-badge">°C</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="deltat-note">Rule: ΔT &lt; 3°C/5°F → <b class="risk">Danger</b>, ≥ 3°C/5°F → <b class="cool">Suitable</b></div>
+    </section>
+    
+    <!-- Photo Section -->
+    <section class="card photo-section" id="photo-section" style="margin-top:10px;">
+        <div class="photo-grid-container">
+            <!-- Container for the first photo -->
+            <div class="photo-container" id="photo-container-1">
+                <input type="file" id="photo-input-1" accept="image/*" capture="camera" style="display:none;">
+                <img id="captured-photo-1" src="file:///C:/Users/KHAN/AppData/Local/Microsoft/Windows/INetCache/IE/A9P0C1II/weather%20Condition%20R.0[1].html" alt="Captured Photo 1">
+                <div class="photo-placeholder-text" id="photo-placeholder-text-1">Photo</div>
+            </div>
+            <!-- Container for the second photo -->
+            <div class="photo-container" id="photo-container-2">
+                <input type="file" id="photo-input-2" accept="image/*" capture="camera" style="display:none;">
+                <img id="captured-photo-2" src="file:///C:/Users/KHAN/AppData/Local/Microsoft/Windows/INetCache/IE/A9P0C1II/weather%20Condition%20R.0[1].html" alt="Captured Photo 2">
+                <div class="photo-placeholder-text" id="photo-placeholder-text-2">Photo</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="card" id="action-buttons-section">
+      <div class="button-grid">
+        <button class="btn" id="btnSaveData">Save</button>
+        <button class="btn" id="btnShare">Share</button>
+        <button class="btn" id="btnToggleTheme"><span id="themeText">Light Mode</span></button>
+        <div class="unit-toggle">
+          <button id="btnC" class="active" aria-pressed="true">°C</button>
+          <button id="btnF" aria-pressed="false">°F</button>
+        </div>
+        <button class="btn" id="btnClear">Clear Inputs</button>
+      </div>
+      <div class="contact-email">hagiyo7705@gmail.com</div>
+    </section>
+  </main>
+
+  <!-- html2canvas for screenshot -->
+  <script src="./Hygrometer Calculator – Mobile_files/html2canvas.min.js.다운로드"></script>
+  <script>
+    // Helpers
+    const el = id => document.getElementById(id);
+    const clamp1 = v => Math.round(v * 10) / 10;
+    const toNum = v => {
+      if (v === "" || v === null || v === undefined) return null;
+      const n = Number(String(v).replace(",", "."));
+      return Number.isFinite(n) ? n : null;
+    };
+    const fmt = n => (n === null || Number.isNaN(n) ? "—" : n.toFixed(1));
+    const ts = () => {
+      const d = new Date();
+      const p = (n, s=2) => String(n).padStart(s, "0");
+      return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+    };
+    const filenameTs = () => {
+      const d = new Date();
+      const p = (n, s=2) => String(n).padStart(s, "0");
+      return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}_${p(d.getHours())}${p(d.getMinutes())}`;
+    };
+
+    // Function to update the clock in the memo section
+    const updateClock = () => {
+      const memoDatetime = el("memo-datetime");
+      if (memoDatetime) {
+        memoDatetime.textContent = ts();
+      }
+      requestAnimationFrame(() => setTimeout(updateClock, 1000));
+    };
+
+    // State
+    let unit = "C"; // "C" | "F"
+    let capturedPhotoUrl1 = null; // Store the URL of the first captured photo
+    let capturedPhotoUrl2 = null; // Store the URL of the second captured photo
+    const DATA_LOG_KEY = 'hygro_data_log';
+
+    // Psychrometrics
+    const es = (T)=>{ const a = 6.112, b = 17.62, c = 243.12; return a * Math.exp((b * T) / (c + T)); };
+    const invMagnus = (e)=>{ const a = 6.112, b = 17.62, c = 243.12; return (c * Math.log(e/a)) / (b - Math.log(e/a)); };
+    function rhFromDryWet(Td, Tw){
+      const PkPa = 101.325;
+      const gamma = 0.00066 * (1 + 0.00115 * Tw) * PkPa;
+      const e_wet = es(Tw) * 0.1;
+      const e_act_kPa = e_wet - gamma * (Td - Tw);
+      const e_sat_kPa = es(Td) * 0.1;
+      return Math.max(0, Math.min(100, (e_act_kPa / e_sat_kPa) * 100));
+    }
+    const CtoF = c => c * 9/5 + 32;
+    const FtoC = f => (f - 32) * 5/9;
+
+    function convertInputs(toUnit){
+      for(const id of ["dry","wet","surf"]){
+        const v = toNum(el(id).value); if(v===null) continue;
+        el(id).value = toUnit==="F" ? fmt(CtoF(v)) : fmt(FtoC(v));
+      }
+    }
+    function setUnit(next){
+      if(unit===next) return;
+      if(next==="F"){ convertInputs("F"); unit="F"; }
+      else { convertInputs("C"); unit="C"; }
+      
+      const btnC = el("btnC");
+      const btnF = el("btnF");
+      if (btnC) btnC.classList.toggle("active", unit==="C");
+      if (btnF) btnF.classList.toggle("active", unit==="F");
+
+      // Update unit badges for input fields
+      const u1 = el("u1");
+      const u2 = el("u2");
+      const u3 = el("u3");
+      if (u1) u1.textContent = unit==="C"?"°C":"°F";
+      if (u2) u2.textContent = unit==="C"?"°C":"°F";
+      if (u3) u3.textContent = unit==="C"?"°C":"°F";
+
+      // Update unit badges for output fields
+      const dpUnitBadge = el("dp-unit-badge");
+      const deltatUnitBadge = el("deltat-unit-badge");
+      if (dpUnitBadge) dpUnitBadge.textContent = unit==="C"?"°C":"°F";
+      if (deltatUnitBadge) deltatUnitBadge.textContent = unit==="C"?"°C":"°F";
+
+      recalc(); // Recalculate to update outputs with new units
+    }
+
+    function recalc(){
+      const dry = toNum(el("dry").value);
+      const wet = toNum(el("wet").value);
+      const surf = toNum(el("surf").value);
+      const Td = unit==="C" ? dry : (dry!==null ? FtoC(dry) : null);
+      const Tw = unit==="C" ? wet : (wet!==null ? FtoC(wet) : null);
+      const Ts = unit==="C" ? surf: (surf!==null? FtoC(surf): null);
+
+      if(Td===null || Tw===null){
+        el("rh").textContent = "—";
+        el("dp").textContent = "—";
+        el("deltat").textContent = "—";
+        el("deltat").className = "value";
+        return;
+      }
+      if(Tw > Td){
+        el("rh").innerHTML = '<span class="risk">Input Error (Wet > Dry)</span>';
+        el("dp").textContent = "—";
+        el("deltat").textContent = "—";
+        el("deltat").className = "value";
+        return;
+      }
+
+      const RH = rhFromDryWet(Td, Tw);
+      const e_act_hPa = (RH/100) * es(Td);
+      const DPc = invMagnus(e_act_hPa);
+      const DP = unit==="C" ? DPc : CtoF(DPc);
+      const DTc = (Ts===null) ? null : (Ts - DPc);
+      const DT = (DTc===null) ? null : (unit==="C" ? DTc : (CtoF(Ts) - CtoF(DPc)));
+
+      setOutputs(RH, DP, DT);
+    }
+
+    function setOutputs(rh, dp, dT, keep=false){
+      const rhEl = el("rh");
+      const dpEl = el("dp");
+      const dtEl = el("deltat");
+      const currentUnit = unit;
+
+      if(!keep){
+        if (rhEl) rhEl.textContent  = (rh==null) ? "—" : `${rh.toFixed(0)}`;
+        if (dpEl) dpEl.textContent  = (dp==null) ? "—" : fmt(dp);
+        
+        if(dtEl){
+          if(dT==null){ dtEl.textContent="—"; dtEl.className="value"; }
+          else{
+            const v = Math.round(dT * 10) / 10;
+            dtEl.textContent = fmt(v);
+            let threshold = (currentUnit === 'C') ? 3 : 5;
+            dtEl.className = "value " + (v < threshold ? "risk" : "cool");
+          }
+        }
+      }
+    }
+
+    // Theme Toggle Logic
+    const THEME_STORAGE_KEY = 'weather-app-theme';
+
+    function applyTheme(theme) {
+      const body = document.body;
+      const themeText = el('themeText');
+      if (theme === 'light') {
+        body.classList.add('light-theme');
+        if (themeText) themeText.textContent = 'Dark Mode';
+      } else {
+        body.classList.remove('light-theme');
+        if (themeText) themeText.textContent = 'Light Mode';
+      }
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    }
+
+    function toggleTheme() {
+      const currentTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(newTheme);
+    }
+
+    window.clearAll = function(){
+      ["dry","wet","surf"].forEach(id=>el(id).value="");
+      el("memo").value="";
+      setOutputs(null,null,null);
+      
+      // Photo reset logic for both images
+      const photoEl1 = el("captured-photo-1");
+      const photoEl2 = el("captured-photo-2");
+      const placeholderText1 = el("photo-placeholder-text-1");
+      const placeholderText2 = el("photo-placeholder-text-2");
+      
+      if (capturedPhotoUrl1) { URL.revokeObjectURL(capturedPhotoUrl1); capturedPhotoUrl1 = null; }
+      if (capturedPhotoUrl2) { URL.revokeObjectURL(capturedPhotoUrl2); capturedPhotoUrl2 = null; }
+      
+      photoEl1.style.display = 'none';
+      photoEl1.src = '';
+      photoEl2.style.display = 'none';
+      photoEl2.src = '';
+      
+      placeholderText1.style.display = 'block';
+      placeholderText2.style.display = 'block';
+    };
+
+    // New function to save data as a text file
+    function saveDataAsText() {
+        const dry = el("dry").value;
+        const wet = el("wet").value;
+        const surf = el("surf").value;
+
+        // Check if any of the main input fields have a value
+        if (!dry && !wet && !surf) {
+            console.log("No data to save.");
+            return; // Exit the function if no data is present
+        }
+
+        const memo = el("memo").value || '';
+        const rh = el("rh").textContent || '—';
+        const dp = el("dp").textContent || '—';
+        const deltat = el("deltat").textContent || '—';
+        const currentUnit = unit;
+        const timestamp = el("memo-datetime").textContent;
+
+        const newDataRow = `"${memo}",${dry},${wet},${surf},${rh},${dp},${deltat},${currentUnit},"${timestamp}"\n`;
+
+        let currentData = localStorage.getItem(DATA_LOG_KEY);
+        if (!currentData) {
+            // Add header if no data exists
+            currentData = "Memo,Dry Bulb,Wet Bulb,Surface Temp,Relative Humidity,Dew Point,Delta T,Unit,Timestamp\n";
+        }
+        currentData += newDataRow;
+        localStorage.setItem(DATA_LOG_KEY, currentData);
+
+        const blob = new Blob([currentData], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `hygrometer_data_${filenameTs()}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    // Screenshot and share logic
+    async function captureAndProcess(action) {
+      const tempContainer = document.createElement('div');
+      tempContainer.style.width = '480px';
+      tempContainer.style.margin = '0 auto';
+      tempContainer.style.backgroundColor = getComputedStyle(document.body).getPropertyValue('--bg');
+      tempContainer.style.color = getComputedStyle(document.body).getPropertyValue('--text');
+      tempContainer.style.padding = '16px 12px 24px';
+      
+      tempContainer.appendChild(el('memo-section').cloneNode(true));
+      tempContainer.appendChild(el('combined-section').cloneNode(true));
+      
+      const photoSection = el('photo-section');
+      if (photoSection) {
+        const clonedPhotoSection = photoSection.cloneNode(true);
+        // Remove placeholders if photos are present
+        const photo1 = el('captured-photo-1');
+        const photo2 = el('captured-photo-2');
+        if (photo1 && photo1.style.display !== 'none') {
+            clonedPhotoSection.querySelector('#photo-placeholder-text-1').remove();
+        }
+        if (photo2 && photo2.style.display !== 'none') {
+            clonedPhotoSection.querySelector('#photo-placeholder-text-2').remove();
+        }
+        tempContainer.appendChild(clonedPhotoSection);
+      }
+      
+      document.body.appendChild(tempContainer);
+
+      const canvas = await html2canvas(tempContainer, {
+        scale: 2,
+        backgroundColor: getComputedStyle(document.body).getPropertyValue('--bg'),
+        allowTaint: true,
+        useCORS: true,
+      });
+
+      document.body.removeChild(tempContainer);
+
+      if (action === 'share') {
+        try {
+          const blob = await new Promise(res => canvas.toBlob(res));
+          const file = new File([blob], (el("memo").value?.trim() || "MEMO") + "_" + filenameTs() + ".png", { type: "image/png" });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            await navigator.share({ files: [file], title: "Weather Condition Check Result" });
+          } else {
+            // Fallback for browsers that don't support the Web Share API
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = file.name;
+            a.click();
+            URL.revokeObjectURL(a.href);
+          }
+        } catch (e) {
+          console.error("An error occurred while sharing:", e);
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+      ["dry","wet","surf","memo"].forEach(id=> el(id).addEventListener("input", recalc));
+      el("btnC")?.addEventListener("click", ()=>setUnit("C"));
+      el("btnF")?.addEventListener("click", ()=>setUnit("F"));
+      document.getElementById("btnSaveData").addEventListener("click", saveDataAsText);
+      document.getElementById("btnShare").addEventListener("click", () => captureAndProcess('share'));
+      document.getElementById("btnClear").addEventListener("click", () => {
+        window.clearAll();
+        // Clear the cumulative data from local storage
+        localStorage.removeItem(DATA_LOG_KEY);
+      });
+      el("btnToggleTheme")?.addEventListener("click", toggleTheme);
+
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY) || 'dark';
+      applyTheme(savedTheme);
+
+      updateClock();
+      recalc(); // Call recalc initially to set outputs to '—'
+
+      // Photo capture functionality for Photo 1
+      const photoContainer1 = el("photo-container-1");
+      const photoInput1 = el("photo-input-1");
+      const capturedPhoto1 = el("captured-photo-1");
+      const placeholderText1 = el("photo-placeholder-text-1");
+      photoContainer1.addEventListener("click", () => {
+        photoInput1.click();
+      });
+      photoInput1.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (capturedPhotoUrl1) { URL.revokeObjectURL(capturedPhotoUrl1); }
+          capturedPhotoUrl1 = URL.createObjectURL(file);
+          capturedPhoto1.src = capturedPhotoUrl1;
+          capturedPhoto1.style.display = 'block';
+          placeholderText1.style.display = 'none';
+        }
+      });
+
+      // Photo capture functionality for Photo 2
+      const photoContainer2 = el("photo-container-2");
+      const photoInput2 = el("photo-input-2");
+      const capturedPhoto2 = el("captured-photo-2");
+      const placeholderText2 = el("photo-placeholder-text-2");
+      photoContainer2.addEventListener("click", () => {
+        photoInput2.click();
+      });
+      photoInput2.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          if (capturedPhotoUrl2) { URL.revokeObjectURL(capturedPhotoUrl2); }
+          capturedPhotoUrl2 = URL.createObjectURL(file);
+          capturedPhoto2.src = capturedPhotoUrl2;
+          capturedPhoto2.style.display = 'block';
+          placeholderText2.style.display = 'none';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
