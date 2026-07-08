@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dew Point Calculator</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; display: flex; justify-content: center; }
+        body { font-family: sans-serif; padding: 20px; display: flex; justify-content: center; background-color: #fff; }
         .container { width: 100%; max-width: 600px; }
         h2 { text-align: center; font-size: 28px; margin-bottom: 30px; }
         
-        /* 레이아웃: 넓은 화면에서는 가로 배치, 좁은 화면에서는 세로 배치 */
         .input-wrapper { display: flex; gap: 15px; align-items: flex-end; }
         .fields { flex: 1; display: flex; flex-direction: column; gap: 15px; }
         
@@ -21,8 +20,7 @@
         }
 
         button { 
-            width: 150px; /* 버튼 고정 너비 */
-            height: 150px; /* 입력 필드 2개 높이 합과 맞춤 */
+            width: 150px; height: 150px;
             background-color: #007bff; color: white; border: none; 
             border-radius: 10px; cursor: pointer; font-size: 22px; font-weight: bold;
         }
@@ -33,7 +31,6 @@
             font-size: 50px; font-weight: bold; color: #0056b3; margin-top: 30px; 
         }
 
-        /* 모바일 대응: 화면이 좁아지면 버튼을 아래로 이동 */
         @media (max-width: 500px) {
             .input-wrapper { flex-direction: column; }
             button { width: 100%; height: 70px; }
@@ -48,11 +45,13 @@
         <div class="fields">
             <div class="input-group">
                 <label>Dry Bulb Temp (°C)</label>
-                <input type="number" id="temp" value="25">
+                <!-- onfocus="this.value=''"를 추가하여 클릭 시 값이 비워지게 설정 -->
+                <input type="number" id="temp" value="25" onfocus="this.value=''">
             </div>
             <div class="input-group">
                 <label>Relative Humidity (%)</label>
-                <input type="number" id="humidity" value="45">
+                <!-- onfocus="this.value=''"를 추가하여 클릭 시 값이 비워지게 설정 -->
+                <input type="number" id="humidity" value="45" onfocus="this.value=''">
             </div>
         </div>
         <button onclick="calculateDewPoint()">Calculate</button>
@@ -62,11 +61,14 @@
 
 <script>
     function calculateDewPoint() {
-        const T = parseFloat(document.getElementById('temp').value);
-        const RH = parseFloat(document.getElementById('humidity').value);
+        const tempInput = document.getElementById('temp');
+        const humidityInput = document.getElementById('humidity');
+        
+        const T = parseFloat(tempInput.value);
+        const RH = parseFloat(humidityInput.value);
 
         if (isNaN(T) || isNaN(RH)) {
-            alert("값을 입력해주세요.");
+            alert("숫자를 올바르게 입력해주세요.");
             return;
         }
 
